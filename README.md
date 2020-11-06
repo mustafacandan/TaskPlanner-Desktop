@@ -1,2 +1,2 @@
 # Liars-Dice-Desktop
-A GUI app which is built by Tkinter as a school project.
+A GUI app(game) which is built by Tkinter as a school project.
