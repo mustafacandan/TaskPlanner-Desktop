@@ -41,15 +41,18 @@ class Connection:
 
 def decompose_msg(msg):
     sample_msg = 'player_id=001,call=new_bid,bid=4x2'
-    player, call, bid = [x.split('=')[1] for x in msg.split(',')]
-    print(f'Player:{player}\nMovement:{call}\nBid:{bid}')
+    try:
+        player, call, bid = [x.split('=')[1] for x in msg.split(',')]
+        print(f'Player:{player}\nMovement:{call}\nBid:{bid}')
+    except IndexError as e:
+        raise ValueError('Inappropriate message from client')
 
 def on_new_client(client, connection):
     cnn = Connection(ip=connection[0], port=connection[1])
     print(f"THe new connection was made from IP: {cnn.ip}, and port: {cnn.port}!")
     print('All conenctions are listed:')
     for c in Connection.get_all():
-        print(f'ip:{c.ip} : port:{c.port}')
+        print(f'\tip:{c.ip} : port:{c.port}')
     while True:
         msg = client.recv(64)
         if msg.decode() == 'exit':
@@ -57,8 +60,8 @@ def on_new_client(client, connection):
         else:
             decompose_msg(msg.decode())
         print(f"The client said: {msg.decode()}")
-        reply = f"You told me: {msg.decode()}"
-        client.sendall(reply.encode('utf-8'))
+        # reply = f"You told me: {msg.decode()}"
+        # client.sendall(reply.encode('utf-8'))
     print(
         f"The client from ip: {cnn.ip}, and port: {cnn.port}, has gracefully diconnected!")
     client.close()
