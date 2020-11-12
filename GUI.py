@@ -14,7 +14,7 @@ def add_handler():
         result = tk.Label(container_frame, text="Entering", height = 5, width = 15).grid(column=2, row=3)
 
 value1 = tk.IntVar()
-value1_entry = tk.Entry(container_frame, width= 10, textvariable=value1)
+value1_entry = tk.Entry(container_frame, width= 10)
 value1_entry.grid(column=2, row=4)
 
 
