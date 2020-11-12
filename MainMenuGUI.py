@@ -23,7 +23,10 @@ code1_entry.grid(column=10, row=2)
 startgame_button = tk.Button(container_frame, text="START GAME WITH RANDOM LOBBY!")
 startgame_button.grid(column=1, row=3, columnspan=2)
 
-settings_button = tk.Button(container_frame, text="SETTINGS")
+def showSettingsMsg():  
+    messagebox.showinfo('Liars Dice 2020', 'settings will be here')
+
+settings_button = tk.Button(container_frame, text="SETTINGS",  command=showSettingsMsg)
 settings_button.grid(column=1, row=4, columnspan=2)
 
 def showCreditsMsg():  
