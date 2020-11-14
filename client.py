@@ -21,6 +21,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sck:
             'player': '0001',
             'command': 'create_room'
         }
+        input()
         msg = json.dumps(data)
         sck.sendall(msg.encode('utf-8'))
         if msg == 'exit':

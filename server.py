@@ -3,10 +3,10 @@ import socket
 import threading
 import time
 import yaml
+import json
 # modules
-from game import Game
 from connection import Connection
-from commands import read
+from operations import operate
 
 credentials = yaml.safe_load(open('./credentials.yml'))
 host = credentials['server']['host']
@@ -25,22 +25,29 @@ except Exception as e:
     raise SystemExit(
         f"We could not bind the server on host: {host} to port: {port}, because: {e}")
 
+
 def on_new_client(client, connection):
     '''This function is called once on every new connection is made'''
-    
+
     cnn = Connection(ip=connection[0], port=connection[1])
-    print(f"The new connection was made from IP: {cnn.ip}!\nAll conenctions are listed:")
-    print('\n'.join([f'\tip:{c.ip} : port:{c.port}' for c in Connection.get_all()]))
+    print(
+        f"The new connection was made from IP: {cnn.ip}!\nAll conenctions are listed:")
+    print(
+        '\n'.join([f'\tip:{c.ip} : port:{c.port}' for c in Connection.get_all()]))
 
     # accepts incoming data from client
     while True:
-        data = client.recv(64)
-        command = read(data)
-        
+        message = client.recv(64)
+        command, data = operate(message)
+
         if command == 'exit':
             break
-        
-    print(f"The client from ip: {cnn.ip}, and port: {cnn.port}, has gracefully diconnected!")
+        elif command == 'enter_code':
+            msg = json.dumps({command: data})
+            client.sendall(msg.encode('utf-8'))
+
+    print(
+        f"The client from ip: {cnn.ip}, and port: {cnn.port}, has gracefully diconnected!")
     client.close()
 
 
