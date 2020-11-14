@@ -1,67 +1,51 @@
+# packages
 import socket
-import argparse
 import threading
 import time
-import weakref
+import yaml
+import json
+# modules
+from helpers.connection import Connection
+from operations import operate
 
+credentials = yaml.safe_load(open('./credentials.yml'))
+host = credentials['server']['host']
+port = credentials['server']['port']
 
-parser = argparse.ArgumentParser(
-    description="This is the server for the multithreaded socket demo!")
-parser.add_argument('--host', metavar='host', type=str,
-                    nargs='?', default='127.0.0.1')
-parser.add_argument('--port', metavar='port',
-                    type=int, nargs='?', default=5001)
-args = parser.parse_args()
-
-print(f"Running the server on: {args.host} and port: {args.port}")
-
+# socket initilization
 sck = socket.socket()
 sck.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 try:
-    sck.bind((args.host, args.port))
+    # listening port
+    sck.bind((host, port))
     sck.listen(60)
+    print(f"Server running on: {host} and port: {port}")
 except Exception as e:
     raise SystemExit(
-        f"We could not bind the server on host: {args.host} to port: {args.port}, because: {e}")
-    
-class Connection:
-    instances = weakref.WeakSet()
+        f"We could not bind the server on host: {host} to port: {port}, because: {e}")
 
-    def __init__(self, ip, port, token=None):
-        self.ip = ip
-        self.port = port
-        self.token = token
-        Connection.instances.add(self)
-
-    @classmethod
-    def get_all(cls):
-        return list(Connection.instances)
-
-
-def decompose_msg(msg):
-    sample_msg = 'player_id=001,call=new_bid,bid=4x2'
-    try:
-        player, call, bid = [x.split('=')[1] for x in msg.split(',')]
-        print(f'Player:{player}\nMovement:{call}\nBid:{bid}')
-    except IndexError as e:
-        raise ValueError('Inappropriate message from client')
 
 def on_new_client(client, connection):
+    '''This function is called once on every new connection is made'''
+
     cnn = Connection(ip=connection[0], port=connection[1])
-    print(f"THe new connection was made from IP: {cnn.ip}, and port: {cnn.port}!")
-    print('All conenctions are listed:')
-    for c in Connection.get_all():
-        print(f'\tip:{c.ip} : port:{c.port}')
+    print(
+        f"The new connection was made from IP: {cnn.ip}!\nAll conenctions are listed:")
+    print(
+        '\n'.join([f'\tip:{c.ip} : port:{c.port}' for c in Connection.get_all()]))
+
+    # accepts incoming data from client
     while True:
-        msg = client.recv(64)
-        if msg.decode() == 'exit':
+        message = client.recv(64)
+        command, data = operate(message)
+
+        if command == 'exit':
             break
-        else:
-            decompose_msg(msg.decode())
-        print(f"The client said: {msg.decode()}")
-        # reply = f"You told me: {msg.decode()}"
-        # client.sendall(reply.encode('utf-8'))
+        elif command == 'enter_code':
+            msg = json.dumps({command: data})
+            client.sendall(msg.encode('utf-8'))
+
     print(
         f"The client from ip: {cnn.ip}, and port: {cnn.port}, has gracefully diconnected!")
     client.close()
@@ -69,12 +53,14 @@ def on_new_client(client, connection):
 
 while True:
     try:
+        # accepts new connections
         client, ip = sck.accept()
+        # start new thread for new connection
         threading._start_new_thread(on_new_client, (client, ip))
     except KeyboardInterrupt:
         print(f"Gracefully shutting down the server!")
+        break
     except Exception as e:
         print(f"Well I did not anticipate this: {e}")
-    time.sleep(0.5)
 
 sck.close()

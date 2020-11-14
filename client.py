@@ -1,25 +1,28 @@
 import socket
-import argparse
+import json
+import yaml
 
-parser = argparse.ArgumentParser(
-    description="This is the client for the multi threaded socket server!")
-parser.add_argument('--host', metavar='host', type=str,
-                    nargs='?', default='127.0.0.1')
-parser.add_argument('--port', metavar='port',
-                    type=int, nargs='?', default=5001)
-args = parser.parse_args()
+credentials = yaml.safe_load(open('./credentials.yml'))
+host = credentials['server']['host']
+port = credentials['server']['port']
 
-print(f"Connecting to server: {args.host} on port: {args.port}")
+print(f"Connecting to server: {host} on port: {port}")
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sck:
     try:
-        sck.connect((args.host, args.port))
+        sck.connect((host, port))
     except Exception as e:
         raise SystemExit(
-            f"We have failed to connect to host: {args.host} on port: {args.port}, because: {e}")
+            f"We have failed to connect to host: {host} on port: {port}, because: {e}")
 
     while True:
-        msg = input("What do we want to send to the server?: ")
+        # msg = input("What do we want to send to the server?: ")
+        data = {
+            'player': '0001',
+            'command': 'create_room'
+        }
+        input()
+        msg = json.dumps(data)
         sck.sendall(msg.encode('utf-8'))
         if msg == 'exit':
             print("Client is saying goodbye!")
