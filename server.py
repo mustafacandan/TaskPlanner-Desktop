@@ -26,10 +26,9 @@ except Exception as e:
 
 def on_new_client(client, connection):
     cnn = Connection(ip=connection[0], port=connection[1])
-    print(f"THe new connection was made from IP: {cnn.ip}, and port: {cnn.port}!")
-    print('All conenctions are listed:')
-    for c in Connection.get_all():
-        print(f'\tip:{c.ip} : port:{c.port}')
+    print(f"The new connection was made from IP: {cnn.ip}!\nAll conenctions are listed:")
+    print('\n'.join([f'\tip:{c.ip} : port:{c.port}' for c in Connection.get_all()]))
+
     while True:
         msg = client.recv(64)
         if msg.decode() == 'exit':
