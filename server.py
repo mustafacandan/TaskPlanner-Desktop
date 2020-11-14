@@ -5,7 +5,7 @@ import time
 import yaml
 import json
 # modules
-from connection import Connection
+from helpers.connection import Connection
 from operations import operate
 
 credentials = yaml.safe_load(open('./credentials.yml'))
