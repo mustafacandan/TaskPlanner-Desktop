@@ -5,7 +5,10 @@ rooms = []
 
 
 def operate(data):
-    message = json.loads(data)
+    try:
+        message = json.loads(data)
+    except json.JSONDecodeError as e:
+        raise ValueError('Invalid message from client')
 
     if message['command'] == 'create_room':
         player = message['player']
