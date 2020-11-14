@@ -1,5 +1,6 @@
 import socket
 import argparse
+import json
 
 parser = argparse.ArgumentParser(
     description="This is the client for the multi threaded socket server!")
@@ -19,7 +20,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sck:
             f"We have failed to connect to host: {args.host} on port: {args.port}, because: {e}")
 
     while True:
-        msg = input("What do we want to send to the server?: ")
+        # msg = input("What do we want to send to the server?: ")
+        data = {
+            'player': '0001',
+            'command': 'create_room'
+        }
+        msg = json.dumps(data)
         sck.sendall(msg.encode('utf-8'))
         if msg == 'exit':
             print("Client is saying goodbye!")
