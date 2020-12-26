@@ -1,5 +1,5 @@
 import json
-from logic import Game, Room
+from logic import Game, Room, Player
 
 rooms = []
 
