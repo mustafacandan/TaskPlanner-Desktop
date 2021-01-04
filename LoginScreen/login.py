@@ -1,6 +1,7 @@
 import tkinter as tk  # python 3
 from tkinter import font as tkfont  # python 3
 
+languages = {"English", "Türkçe"}
 
 def login():
     print("Pressed Login Button")
@@ -49,21 +50,31 @@ class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        LoginPageFrame = tk.LabelFrame(self, width=300)
+        LoginPageFrame.grid(row=0, column=0, padx=10, pady=10, ipady=10)
         username = tk.StringVar()
+        languageVar = tk.StringVar(self)
+        languageVar.set("English")
 
-        usernameLabel = tk.Label(self, text="Username").grid(row=0, column=0)
-        usernameEntryBox = tk.Entry(self, textvariable=username).grid(row=0, column=1)
+        #Language List
+        languageList = tk.OptionMenu(LoginPageFrame, languageVar, *languages)
+        languageLabel = tk.Label(LoginPageFrame, text="Select Language").grid(row=0, column=4, sticky="ne")
+        languageList.grid(row=0, column=5, padx=5)
+
+        #Username
+        usernameLabel = tk.Label(LoginPageFrame, text="Username").grid(row=4, column=3,pady=5,  padx=100)
+        usernameEntryBox = tk.Entry(LoginPageFrame, textvariable=username).grid(row=5, column=3,  padx=100)
 
         # password label and entry box
         password = tk.StringVar()
-        passwordLabel = tk.Label(self, text="Password").grid(row=1, column=0)
-        passwordEntryBox = tk.Entry(self, textvariable=password, show="*").grid(row=1, column=1)
+        passwordLabel = tk.Label(LoginPageFrame, text="Password").grid(row=6, column=3,  padx=100)
+        passwordEntryBox = tk.Entry(LoginPageFrame, textvariable=password, show="*").grid(row=7, column=3,  padx=100)
 
-        loginButton = tk.Button(self, text="Login",
-                                command=login).grid(row=3, column=1)
+        loginButton = tk.Button(LoginPageFrame, text="Login",
+                                command=login).grid(row=9, column=3, pady=10, padx=100)
 
-        registerButton = tk.Button(self, text="New User",
-                                   command=lambda: controller.show_frame("RegisterPage")).grid(row=3, column=2)
+        registerButton = tk.Button(LoginPageFrame, text="New User",
+                                   command=lambda: controller.show_frame("RegisterPage")).grid(row=10, column=3, pady=5,  padx=100)
 
 
 class RegisterPage(tk.Frame):
@@ -72,21 +83,24 @@ class RegisterPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         newUsername = tk.StringVar()
+        RegisterPageFrame = tk.LabelFrame(self)
+        RegisterPageFrame.pack(fill="both", expand="yes", padx=5, pady=10)
 
-        usernameLabel = tk.Label(self, text="Username").grid(row=0, column=0)
-        usernameEntryBox = tk.Entry(self, textvariable=newUsername).grid(row=0, column=1)
+        usernameLabel = tk.Label(RegisterPageFrame, text="Username").grid(row=0, column=0)
+        usernameEntryBox = tk.Entry(RegisterPageFrame, textvariable=newUsername).grid(row=0, column=1)
 
         # password label and entry box
         newPassword = tk.StringVar()
-        passwordLabel = tk.Label(self, text="Password").grid(row=1, column=0)
-        passwordEntryBox = tk.Entry(self, textvariable=newPassword, show="*").grid(row=1, column=1)
+        passwordLabel = tk.Label(RegisterPageFrame, text="Password").grid(row=1, column=0)
+        passwordEntryBox = tk.Entry(RegisterPageFrame, textvariable=newPassword, show="*").grid(row=1, column=1)
 
         # Register
-        RegisterButton = tk.Button(self, text="Register", command=register).grid(row=3, column=0)
+        RegisterButton = tk.Button(RegisterPageFrame, text="Register", command=register).grid(row=3, column=0)
 
 
 if __name__ == "__main__":
     app = SampleApp()
     app.title("Task Planner Login Page")
-    app.geometry("500x500")
+    #app.resizable(False, False)
+    app.geometry("600x270")
     app.mainloop()
