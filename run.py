@@ -35,6 +35,8 @@ class TaskPlanner:
     def filter_inbox(self):
         pass
 
+    
+
 
     def create_widgets(self):
         self.left_frame = tk.Frame(self.win)
@@ -81,6 +83,9 @@ class TaskPlanner:
 
         self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.add_project)
         self.all_btn.grid(column=2, row=0, columnspan=1, pady=4)
+
+        self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.add_project)
+        self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
 
 
         ## Right Bot Frame
