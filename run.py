@@ -4,7 +4,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox as msg
 from db_functions import Database
-
+from models import User, Task
+from datetime import datetime
 db = Database()
 db.create_tables()
 
@@ -105,5 +106,10 @@ class TaskPlanner:
         # self.input_entry.bind("<Return>", lambda e: db.convert())
 
 
+
 app = TaskPlanner()
-app.win.mainloop()
+# app.win.mainloop()
+
+active_user = User('isim','email','pwd')
+task1 = Task(active_user, None, datetime.now(), datetime.now())
+

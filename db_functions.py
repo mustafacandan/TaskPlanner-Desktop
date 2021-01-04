@@ -87,28 +87,127 @@ class Database:
             print('ERRORR', str(exc))
             # msg.showerror("Error", "Error: " + str(exc))
 
-       
-    def clear_history(self):
+    # user
+    def add_user(self, user):
+        if all([user.name, user.email, user.pwd]):
+            raise ValueError()
+            # TODO: Show Error
         try:
             conn = self.get_db_connection()
             cur = conn.cursor()
-            cur.execute("""delete from ConversionHistory;""")
+            cur.execute("insert into User(name, email, password) VALUES (?, ?, ?)", (user.name, user.email, user.pwd))
             conn.commit()
+            query = """SELECT id from User where email = ?"""
+            cur.execute(query, (user.email,))
+            user_id = cur.fetchone()
             conn.close()
-            msg.showinfo("Clear History", "Clear History")
+            return user_id
         except Exception as exc:
             print('ERRORR', str(exc))
             # msg.showerror("Error", "Error: " + str(exc))
 
-    
-    def add_to_database(self, result):
+    def check_user_pwd(self, email, password):
+        pass
+
+    # project
+    def get_projects(self, user):
         try:
             conn = self.get_db_connection()
             cur = conn.cursor()
-            cur.execute("insert into ConversionHistory(conversion_text) VALUES (?)", (result,))
+            query = """SELECT project.id, project.name from Project where project.user_id = ?"""
+            cur.execute(query, (user.id,))
+            projects = cur.fetchall()
+            conn.close()
+            return projects
+        except Exception as exc:
+            print('ERRORR', str(exc))
+            # msg.showerror("Error", "Error: " + str(exc))        
+
+    # # tag
+    # def get_tags(self, user):
+    #     try:
+    #         conn = self.get_db_connection()
+    #         cur = conn.cursor()
+    #         query = """SELECT tag.id, tag.name from Tag"""
+    #         cur.execute(query, (user.id,))
+    #         tags = cur.fetchall()
+    #         conn.close()
+    #         return tags
+    #     except Exception as exc:
+    #         print('ERRORR', str(exc))
+    #         # msg.showerror("Error", "Error: " + str(exc))   
+
+    # task
+    def get_tasks(self, user, filters):
+        date_range = filters['date']
+        project = filters['project']
+        project_id = 1 # TODO: parametre ekle
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            query = """
+            SELECT *
+            from Task, Project
+            left join Project P on Task.project_id = P.id
+            where project.user_id = 1 and Project.id = ?"""
+            cur.execute(query, (project_id,))
+            tasks = cur.fetchall()
+            conn.close()
+            return tasks
+        except Exception as exc:
+            print('ERRORR', str(exc))
+            # msg.showerror("Error", "Error: " + str(exc))   
+
+    def add_task(self, task):
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            cur.execute("insert into Task(user_id, project_id, date_created, due_date) VALUES (?, ?, ?, ?)", 
+                            (task.user.id, task.project, task.date_created, task.due_date))
             conn.commit()
             conn.close()
         except Exception as exc:
             print('ERRORR', str(exc))
             # msg.showerror("Error", "Error: " + str(exc))
 
+
+    def set_task_done(self, task):
+        # UPDATE Task SET status = 'done' WHERE id = 1
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            cur.execute("UPDATE Task SET status = 'done' WHERE id = ?)", (task.id, ))
+            conn.commit()
+            conn.close()
+        except Exception as exc:
+            print('ERRORR', str(exc))
+            # msg.showerror("Error", "Error: " + str(exc))
+
+    # session
+    def get_last_user(self):
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            query = """
+            SELECT last_user
+            from Session"""
+            cur.execute(query)
+            last_user = cur.fetchone()
+            conn.close()
+            return last_user
+        except Exception as exc:
+            print('ERRORR', str(exc))
+
+    def get_last_language(self):
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            query = """
+            SELECT last_language
+            from Session"""
+            cur.execute(query)
+            last_language = cur.fetchone()
+            conn.close()
+            return last_language
+        except Exception as exc:
+            print('ERRORR', str(exc))
