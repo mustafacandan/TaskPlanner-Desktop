@@ -6,7 +6,7 @@ from tkinter import messagebox as msg
 from db_functions import Database
 
 db = Database()
-db.create_db_table()
+db.create_tables()
 
 projects = [
     'Project A',
@@ -100,7 +100,7 @@ class TaskPlanner:
 
 
         ## Bindings
-        self.win.bind("<F1>", lambda e: db.create_db_table())
+        self.win.bind("<F1>", lambda e: db.create_tables())
         self.win.bind("<F2>", lambda e: db.clear_history())
         # self.input_entry.bind("<Return>", lambda e: db.convert())
 

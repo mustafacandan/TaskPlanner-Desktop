@@ -1,23 +1,84 @@
 from tkinter import messagebox as msg
 import sqlite3
 
-# import yaml
-
-# credentials = yaml.safe_load(open('./credentials.yml'))
-# db_path = credentials['database']['path']
+DB_NAME = 'planner.db'
 
 class Database:
     def get_db_connection(self):
-        return sqlite3.connect('planner.db')
+        return sqlite3.connect(DB_NAME)
 
-    def create_db_table(self):
+    def create_tables(self):
         try:
             conn = self.get_db_connection()
             cur = conn.cursor()
+            
+            # Projects Table
             cur.execute("""
-            CREATE TABLE IF NOT EXISTS ConversionHistory (
-                cid   INTEGER PRIMARY KEY AUTOINCREMENT,
-                conversion_text TEXT
+            create table if not exists Project
+            (
+                id      integer
+                    constraint Project_pk
+                        primary key autoincrement,
+                name    varchar,
+                user_id integer not null
+            );
+            """)
+            conn.commit()
+            
+            # Tags Table
+            cur.execute("""
+            create table if not exists Tag
+            (
+                id   integer
+                    constraint Tag_pk
+                        primary key autoincrement,
+                name varchar
+            );
+            """)
+
+            # Users Table
+            cur.execute("""
+            create table if not exists User
+            (
+                id       integer
+                    constraint User_pk
+                        primary key autoincrement,
+                name     varchar,
+                email    varchar,
+                password varchar not null
+            );
+            """)
+            conn.commit()
+
+            # Tasks Table
+            cur.execute("""
+            create table if not exists Task
+            (
+                id           integer
+                    constraint Task_pk
+                        primary key autoincrement,
+                user_id      integer  not null
+                    references User,
+                project_id   integer
+                    references Project,
+                date_created Datetime not null,
+                due_date     Datetime
+            );
+            """)
+            conn.commit()
+
+
+            # Tasks and Tags Mapping Table 
+            cur.execute("""
+            create table if not exists Task_Tag
+            (
+                id      integer
+                    constraint Task_Tag_pk
+                        primary key autoincrement,
+                task_id integer not null
+                    references Task,
+                tag_id  integer not null
+                    references Tag
             );
             """)
             conn.commit()
