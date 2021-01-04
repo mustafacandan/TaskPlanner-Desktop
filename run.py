@@ -9,13 +9,7 @@ from datetime import datetime
 db = Database()
 db.create_tables()
 
-projects = [
-    'Project A',
-    'Project B',
-    'Project C'
-    ]
-
-tags = ['urgent', 'can wait']
+user = User(id=db.get_last_user())
 
 class TaskPlanner:
     def __init__(self):
@@ -73,16 +67,8 @@ class TaskPlanner:
         self.all_btn = ttk.Button(self.left_frame, text="+", width=2, command=self.add_project)
         self.all_btn.grid(column=1, row=4, columnspan=1, pady=4)
 
-        for project in projects:
-            self.all_btn = ttk.Button(self.left_frame, text=project, width=15, command=self.filter_all)
-            self.all_btn.grid(column=0, columnspan=2, pady=20)
-
-
-        # Tags
-        ttk.Label(self.left_frame, text="Tags").grid(column=0, columnspan=2, pady=10)
-        
-        for tag in tags:
-            self.all_btn = ttk.Button(self.left_frame, text=tag, width=15, command=self.filter_all)
+        for project in db.get_projects(user):
+            self.all_btn = ttk.Button(self.left_frame, text=project[1], width=15, command=self.filter_all)
             self.all_btn.grid(column=0, columnspan=2, pady=20)
 
    
@@ -98,6 +84,9 @@ class TaskPlanner:
 
 
         ## Right Bot Frame
+        for task in db.get_tasks(user):
+            task_text = f'{task.title}   |   {task.desc}   |   {task.project}     '
+            ttk.Label(self.right_bot_frame, text=task_text).grid(column=0, columnspan=5, pady=10)
 
 
         ## Bindings
@@ -107,9 +96,10 @@ class TaskPlanner:
 
 
 
-app = TaskPlanner()
-# app.win.mainloop()
-
 active_user = User('isim','email','pwd')
-task1 = Task(active_user, None, datetime.now(), datetime.now())
+task1 = Task(active_user, None, 'Baslik', 'Aciklama', datetime.now(), datetime.now())
+
+
+app = TaskPlanner()
+app.win.mainloop()
 

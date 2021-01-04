@@ -1,5 +1,6 @@
 from tkinter import messagebox as msg
 import sqlite3
+from models import Task
 
 DB_NAME = 'planner.db'
 
@@ -138,9 +139,9 @@ class Database:
     #         # msg.showerror("Error", "Error: " + str(exc))   
 
     # task
-    def get_tasks(self, user, filters):
-        date_range = filters['date']
-        project = filters['project']
+    def get_tasks(self, user, filters=None):
+        # date_range = filters['date'] 
+        # project = filters['project']
         project_id = 1 # TODO: parametre ekle
         try:
             conn = self.get_db_connection()
@@ -151,7 +152,11 @@ class Database:
             left join Project P on Task.project_id = P.id
             where project.user_id = 1 and Project.id = ?"""
             cur.execute(query, (project_id,))
-            tasks = cur.fetchall()
+            tasks = []
+            for task in cur.fetchall():
+                task_id, user_id, project_id, date_created, due_date, desc, title, status, _, project_name, _,_,_,_ = task
+                t = Task(user, project=project_name, title=title, desc=desc, date_created=date_created, due_date=due_date, id=task_id)
+                tasks.append(t)
             conn.close()
             return tasks
         except Exception as exc:
@@ -189,10 +194,10 @@ class Database:
             conn = self.get_db_connection()
             cur = conn.cursor()
             query = """
-            SELECT last_user
+            SELECT id, last_user
             from Session"""
             cur.execute(query)
-            last_user = cur.fetchone()
+            _, last_user = cur.fetchone()
             conn.close()
             return last_user
         except Exception as exc:
