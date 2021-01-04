@@ -1,9 +1,15 @@
 en:
+  Title: Task Planner Login Page
   Login: Login
   Register: Register
   Check your email: Check your email
+  Password: Password
+  Select Language: Select Language
   
 tr:
+    Title: Task Planner Giriş Ekranı
     Login: Giriş
     Register: Kayıt
     Check your email: Emailini kontrol et
+    Password: Şifre
+    Select Language: Dil Seçin
