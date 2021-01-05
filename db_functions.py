@@ -187,8 +187,15 @@ class Database:
         try:
             conn = self.get_db_connection()
             cur = conn.cursor()
+            query = """
+            SELECT id, name
+            from Project
+            where Project.name = ?"""
+            cur.execute(query, (task.project, ))
+            project_id, name = cur.fetchone()
+            cur = conn.cursor()
             cur.execute("insert into Task(user_id, project_id, date_created, due_date, desc, title, status) VALUES (?, ?, ?, ?, ?, ?, ?)", 
-                            (task.user.id, task.project, task.date_created, task.due_date, task.desc, task.title, 'no status'))
+                            (task.user.id, project_id, task.date_created, task.due_date, task.desc, task.title, 'no status'))
             conn.commit()
             conn.close()
         except Exception as exc:

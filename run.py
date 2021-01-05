@@ -60,7 +60,10 @@ class TaskPlanner:
         project_var = tk.StringVar()
         project_var.set("Projects")
 
-        projects = ['No Project'] if db.get_projects(user) else db.get_projects(user)
+        if db.get_projects(user):
+            projects = [x[1] for x in  db.get_projects(user)]
+        else:
+            projects = ['No Project']
 
         project_list = tk.OptionMenu(add_task_win, project_var, *projects)
         project_list.grid(row=5, column=1, padx=5)
