@@ -124,6 +124,18 @@ class Database:
             print('ERRORR', str(exc))
             # msg.showerror("Error", "Error: " + str(exc))        
 
+    def add_project(self, name, user):
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            cur.execute("insert into Project(name, user_id) VALUES (?, ?)", 
+                            (name, user.id))
+            conn.commit()
+            conn.close()
+        except Exception as exc:
+            print('ERRORR', str(exc))
+            # msg.showerror("Error", "Error: " + str(exc))
+
     # # tag
     # def get_tags(self, user):
     #     try:

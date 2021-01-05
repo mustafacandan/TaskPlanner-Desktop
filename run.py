@@ -29,13 +29,8 @@ class TaskPlanner:
     def filter_all(self):
         pass
 
-    def add_project(self):
-        pass
-
     def add_task(self):
         def add_task_complete():
-            print(title_var.get(), desc_var.get(), project_var.get())
-
             db.add_task( 
                 Task(user,datetime.now(),
                 datetime.now(),
@@ -72,6 +67,31 @@ class TaskPlanner:
         loginButton.grid(row=6, column=1, pady=10, padx=100)
 
         ttk.Label(add_task_win,  text ="Add task").pack() 
+
+    def add_project(self):
+        def add_project_complete():
+            print(title_var.get())
+
+            db.add_project(title_var.get(), user)
+
+            add_project_win.destroy()
+
+        add_project_win = Toplevel(self.win) 
+        # sets the geometry of toplevel 
+        add_project_win.geometry("400x400") 
+
+        title_var = tk.StringVar()
+        title_lbl = tk.Label(add_project_win, text='Title of Project')
+        title_lbl.grid(row=1, column=1, pady=5, padx=100)
+        title_entry = tk.Entry(add_project_win, textvariable=title_var).grid(row=2, column=1, padx=100)
+
+
+        loginButton = tk.Button(add_project_win, text='Add',
+                                command=add_project_complete)
+        loginButton.grid(row=6, column=1, pady=10, padx=100)
+
+        ttk.Label(add_project_win,  text ="Add Projetc").pack() 
+
 
     def filter_inbox(self):
         pass
