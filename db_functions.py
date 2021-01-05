@@ -235,11 +235,22 @@ class Database:
             conn = self.get_db_connection()
             cur = conn.cursor()
             query = """
-            SELECT last_language
+            SELECT id, last_language
             from Session"""
             cur.execute(query)
-            last_language = cur.fetchone()
+            _, last_language = cur.fetchone()
             conn.close()
             return last_language
+        except Exception as exc:
+            print('ERRORR', str(exc))
+
+    def set_language(self, lang):
+        try:
+            conn = self.get_db_connection()
+            cur = conn.cursor()
+            cur.execute("UPDATE Session SET last_language = ? WHERE id = 1", (lang, ))
+            conn.commit()
+            conn.close()
+            return True
         except Exception as exc:
             print('ERRORR', str(exc))
