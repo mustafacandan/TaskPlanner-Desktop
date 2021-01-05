@@ -5,6 +5,8 @@ en:
   Check your email: Check your email
   Password: Password
   Select Language: Select Language
+  Welcome: Welcome!
+  Introduction: Welcome to Task Planner App!
   
 tr:
     Title: Task Planner Giriş Ekranı
@@ -13,3 +15,5 @@ tr:
     Check your email: Emailini kontrol et
     Password: Şifre
     Select Language: Dil Seçin
+    Welcome: Hoşgeldiniz!
+    Introduction: Task Planner Uygulamasına Hoşgeldin!

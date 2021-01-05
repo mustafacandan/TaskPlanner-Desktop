@@ -105,6 +105,47 @@ class LoginPage(tk.Frame):
         registerButton.grid(row=10, column=3, pady=5,
                             padx=100)
 
+class WelcomeScreen():
+    win = tk.Tk()
+
+    def ContinueLogin(self):
+        print("Continue Login")
+        return
+
+    def checkedTurkish_to_english(self):
+        print("Checked Turkish")
+        print(f"Turkish button var: {self.turkishLang.get()}")
+        if self.englishLang.get():
+            self.englishLang.set(0)
+
+    def checkedEnglish_to_turkish(self):
+        print("Checked English")
+        print(f"English button var: {self.englishLang.get()}")
+        if self.turkishLang.get():
+            self.turkishLang.set(0)
+
+    def __init__(self, languageOption):
+        self.win = tk.Tk()
+        self.win.title("Title Name of Welcome Screen")
+        self.win.geometry("600x270")
+        self.pw = tk.PanedWindow(self.win, orient="vertical")
+        self.welcomeLabelFrame = tk.LabelFrame(self.pw, width=300)
+        self.welcomeLabelFrame.grid(row=0, column=0, padx=10, pady=10, ipady=10)
+        self.welcomeLabel = tk.Label(self.welcomeLabelFrame, text=l10n[languageOption]['Introduction'])
+        self.welcomeLabel.grid(row=3, column=1, sticky="n", padx=200, pady=30)
+        self.pw.add(self.welcomeLabelFrame)
+        self.pw.pack(fill="both", expand=True)
+
+        self.selectLanguageLabel = tk.Label(self.welcomeLabelFrame, text=l10n[languageOption]['Select Language'])
+        self.selectLanguageLabel.grid(row=5, column=1, padx=100)
+
+        self.turkishLang = tk.BooleanVar()
+        self.englishLang = tk.BooleanVar()
+        tk.Checkbutton(self.welcomeLabelFrame, text="Turkish", variable=self.turkishLang, command=lambda: self.checkedTurkish_to_english()).grid(row=6, column=1, padx=80)
+        tk.Checkbutton(self.welcomeLabelFrame, text="English", variable=self.englishLang, command=lambda: self.checkedEnglish_to_turkish()).grid(row=7, column=1, padx=80)
+
+        continueButton = tk.Button(self.welcomeLabelFrame, text="Continue",command=self.ContinueLogin() )
+        continueButton.grid(row=8, column=1, padx=80, pady=30)
 
 class RegisterPage(tk.Frame):
     def popupWindow(self):
@@ -130,9 +171,12 @@ class RegisterPage(tk.Frame):
 
 
 if __name__ == "__main__":
-    app = SampleApp()
-    app.title(l10n[lang]['Title'])
-    # app.resizable(False, False)
-    app.geometry("600x270")
-    app.mainloop()
+    language = 'en'
+    welcomeScreen= WelcomeScreen(language)
+    welcomeScreen.win.mainloop()
+    # app = SampleApp()
+    # app.title(l10n[lang]['Title'])
+    # # app.resizable(False, False)
+    # app.geometry("600x270")
+    # app.mainloop()
 
