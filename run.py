@@ -37,7 +37,8 @@ class TaskPlanner:
                 project=project_var.get(),
                 title=title_var.get(),
                 desc=desc_var.get()))
-
+            self.right_bot_frame.destroy()
+            self.create_right_bot_frame()
             add_task_win.destroy()
 
         add_task_win = Toplevel(self.win) 
@@ -73,7 +74,8 @@ class TaskPlanner:
             print(title_var.get())
 
             db.add_project(title_var.get(), user)
-
+            self.left_frame.destroy()
+            self.create_left_frame()
             add_project_win.destroy()
 
         add_project_win = Toplevel(self.win) 
@@ -108,20 +110,18 @@ class TaskPlanner:
 
 
     def create_widgets(self):
+        self.create_left_frame()
+        self.create_right_top_frame()
+        self.create_right_bot_frame()
+
+    def create_left_frame(self):
+        ## Left Frame
         self.left_frame = tk.Frame(self.win)
         self.left_frame.pack(side="left", fill=tk.BOTH, expand=1)
 
         self.right_frame = tk.Frame(self.win)
         self.right_frame.pack(side="right", fill=tk.BOTH, expand=1)
 
-        self.right_top_frame = tk.Frame(self.right_frame)
-        self.right_top_frame.pack(side="top", fill=tk.BOTH, expand=1)
-
-        self.right_bot_frame = tk.Frame(self.right_frame)
-        self.right_bot_frame.pack(side="bottom", fill=tk.BOTH, expand=1)
-
-
-        ## Left Frame
         ttk.Label(self.left_frame, text="Tasks").grid(column=0, row=0, columnspan=2, pady=10)
 
         self.inbox_btn = ttk.Button(self.left_frame, text="inbox", width=15, command=self.filter_inbox)
@@ -142,8 +142,11 @@ class TaskPlanner:
             self.all_btn = ttk.Button(self.left_frame, text=project[1], width=15, command=self.filter_all)
             self.all_btn.grid(column=0, columnspan=2, pady=20)
 
-   
+    def create_right_top_frame(self):   
         ## Right Top Frame
+        self.right_top_frame = tk.Frame(self.right_frame)
+        self.right_top_frame.pack(side="top", fill=tk.BOTH, expand=1)
+
         self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
         self.all_btn.grid(column=0, row=0, columnspan=1, pady=4)
 
@@ -157,8 +160,10 @@ class TaskPlanner:
         self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
         self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
 
-
+    def create_right_bot_frame(self):
         ## Right Bot Frame
+        self.right_bot_frame = tk.Frame(self.right_frame)
+        self.right_bot_frame.pack(side="bottom", fill=tk.BOTH, expand=1)
         for task in db.get_tasks(user):
             task_text = f'{task.title}   |   {task.desc}   |   {task.project}     '
             ttk.Label(self.right_bot_frame, text=task_text).grid(column=0, columnspan=5, pady=10)
