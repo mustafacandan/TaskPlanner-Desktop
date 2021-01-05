@@ -113,7 +113,7 @@ class TaskPlanner:
     def delete_project(self):
         msg.askquestion('Delete Current Project','Are you sure you really want to delete choosen project?', icon = 'warning')
         if msg == 'yes':
-            Project.destroy()
+            db.delete_project(project_name)
             
         else: 
          pass
