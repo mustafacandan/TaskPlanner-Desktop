@@ -75,7 +75,15 @@ class TaskPlanner:
 
     def filter_inbox(self):
         pass
+    
+    def answer_mark(self):
+        msg.showinfo(title= "?", message="Following project ToDos’ better via this software. You can add, categorize and remove projects. And you can track your projects.")
 
+    def search_project(self):
+        pass
+
+    def history_project(self):
+        pass
     
 
 
@@ -119,13 +127,14 @@ class TaskPlanner:
         self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
         self.all_btn.grid(column=0, row=0, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.add_project)
+        self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.search_project)
         self.all_btn.grid(column=1, row=0, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.add_project)
+        self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.history_project)
         self.all_btn.grid(column=2, row=0, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.add_project)
+       
+        self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
         self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
 
 
