@@ -84,17 +84,34 @@ class Login():
         self.loginButton.grid(row=9, column=3, pady=10, padx=100)
 
         self.registerButton = tk.Button(self.main_frame, text=l10n[lang]['Register'],
-                                   command=lambda: controller.show_frame("RegisterPage"))
+                                   command=goto_register)
         self.registerButton.grid(row=10, column=3, pady=5,
                             padx=100)
 
 class Register():
     def __init__(self):
         self.win = Toplevel(root)
-        self.win.title('Lab')
+        self.win.title("Register - Task Planner")
+        self.win.geometry("800x400+10+10")
+        self.win.resizable(False, False)
         self.win.withdraw() # hide lab window
         self.button2 = ttk.Button(self.win, text='Close', command=quit)
-        self.button2.pack(padx=100, pady=50)
+        # self.button2.pack(padx=100, pady=50)
+        self.create_widgets()
+
+    def create_widgets(self):
+        self.newUsername = tk.StringVar()
+        self.usernameLabel = tk.Label(self.win, text="E-Mail").grid(row=5, column=3, padx=100, pady=20)
+        self.usernameEntryBox = tk.Entry(self.win, textvariable=self.newUsername).grid(row=5, column=4)
+
+        # password label and entry box
+        self.newPassword = tk.StringVar()
+        self.passwordLabel = tk.Label(self.win, text=l10n[lang]['Password']).grid(row=6, column=3)
+        self.passwordEntryBox = tk.Entry(self.win, textvariable=self.newPassword, show="*").grid(row=6, column=4)
+
+        # Register
+        self.RegisterButton = tk.Button(self.win, text=l10n[lang]['Register'], command=goto_dashboard).grid(row=7, column=4, pady=10)
+
 
 class Dashboard():
     def __init__(self):
