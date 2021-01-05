@@ -36,6 +36,7 @@ def goto_dashboard():
     dashboard.win.deiconify() # show dashboard window
 
 def change_language(lang):
+    print(lang)
     if lang in languages:
         lang = lang
         db.set_language(lang)
@@ -98,7 +99,7 @@ class Register():
 class Dashboard():
     def __init__(self):
         self.win = Toplevel(root)
-        self.win.title("Task Planner")
+        self.win.title(l10n[lang]['Task Planner'])
         self.win.withdraw() # hide lab window
         self.win.geometry("1280x748+10+10")
         self.win.resizable(False, False)
@@ -133,17 +134,17 @@ class Dashboard():
         add_task_win.geometry("400x400") 
 
         title_var = tk.StringVar()
-        title_lbl = tk.Label(add_task_win, text='Title of Task')
+        title_lbl = tk.Label(add_task_win, text=l10n[lang]['Title'])
         title_lbl.grid(row=1, column=1, pady=5, padx=100)
         title_entry = tk.Entry(add_task_win, textvariable=title_var).grid(row=2, column=1, padx=100)
 
         desc_var = tk.StringVar()
-        desc_lbl = tk.Label(add_task_win, text='Desc of Task')
+        desc_lbl = tk.Label(add_task_win, text=l10n[lang]['Description'])
         desc_lbl.grid(row=3, column=1, pady=5, padx=100)
         desc_entry = tk.Entry(add_task_win, textvariable=desc_var).grid(row=4, column=1, padx=100)
 
         project_var = tk.StringVar()
-        project_var.set("Projects")
+        project_var.set(l10n[lang]['Projects'])
 
         if db.get_projects(user):
             projects = [x[1] for x in  db.get_projects(user)]
@@ -153,11 +154,11 @@ class Dashboard():
         project_list = tk.OptionMenu(add_task_win, project_var, *projects)
         project_list.grid(row=5, column=1, padx=5)
 
-        loginButton = tk.Button(add_task_win, text='Add',
+        loginButton = tk.Button(add_task_win, text=l10n[lang]['Add'],
                                 command=add_task_complete)
         loginButton.grid(row=6, column=1, pady=10, padx=100)
 
-        ttk.Label(add_task_win,  text ="Add task").pack() 
+        ttk.Label(add_task_win,  text =l10n[lang]['Add Task']).pack() 
 
     def add_project(self):
         def add_project_complete():
@@ -173,16 +174,16 @@ class Dashboard():
         add_project_win.geometry("400x400") 
 
         title_var = tk.StringVar()
-        title_lbl = tk.Label(add_project_win, text='Title of Project')
+        title_lbl = tk.Label(add_project_win, text=l10n[lang]['Title'])
         title_lbl.grid(row=1, column=1, pady=5, padx=100)
         title_entry = tk.Entry(add_project_win, textvariable=title_var).grid(row=2, column=1, padx=100)
 
 
-        loginButton = tk.Button(add_project_win, text='Add',
+        loginButton = tk.Button(add_project_win, text=l10n[lang]['Add'],
                                 command=add_project_complete)
         loginButton.grid(row=6, column=1, pady=10, padx=100)
 
-        ttk.Label(add_project_win,  text ="Add Projetc").pack() 
+        ttk.Label(add_project_win,  text =l10n[lang]['Add Project']).pack() 
 
 
     def answer_mark(self):
@@ -221,11 +222,11 @@ class Dashboard():
         self.all_btn.grid(column=0, row=3, columnspan=2, pady=20)
 
         # Projects 
-        ttk.Label(self.left_frame, text="Projects").grid(column=0, row=4, columnspan=1, pady=10)
+        ttk.Label(self.left_frame, text=l10n[lang]['Projects']).grid(column=0, row=4, columnspan=1, pady=10)
         self.all_btn = ttk.Button(self.left_frame, text="+", width=2, command=self.add_project)
         self.all_btn.grid(column=1, row=4, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.left_frame, text=' -- All -- ', width=15, command=lambda arg=None:  self.apply_filter(project=arg))
+        self.all_btn = ttk.Button(self.left_frame, text=l10n[lang]['-- All --'], width=15, command=lambda arg=None:  self.apply_filter(project=arg))
         self.all_btn.grid(column=0, columnspan=2, pady=20)
 
         for project in db.get_projects(user):
@@ -237,15 +238,8 @@ class Dashboard():
         self.right_top_frame = tk.Frame(self.right_frame)
         self.right_top_frame.pack(side="top", fill=tk.BOTH, expand=1)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
+        self.all_btn = ttk.Button(self.right_top_frame, text=l10n[lang]['Add'], width=15, command=self.add_task)
         self.all_btn.grid(column=0, row=0, columnspan=1, pady=4)
-
-        self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.search_project)
-        self.all_btn.grid(column=1, row=0, columnspan=1, pady=4)
-
-        self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.history_project)
-        self.all_btn.grid(column=2, row=0, columnspan=1, pady=4)
-
        
         self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
         self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
@@ -258,21 +252,6 @@ class Dashboard():
         for task in db.get_tasks(user, filters=filters):
             task_text = f'{task.title}   |   {task.desc}   |   {task.project}     '
             ttk.Label(self.right_bot_frame, text=task_text).grid(column=0, columnspan=5, pady=10)
-
-
-        ## Bindings
-        self.win.bind("<F1>", lambda e: db.create_tables())
-        self.win.bind("<F2>", lambda e: db.clear_history())
-        # self.input_entry.bind("<Return>", lambda e: db.convert())
-
-
-
-'''
-root.withdraw() # hide root window
-wc = Welcome()
-lab = Lab()
-root.mainloop()
-'''
 
 
 root.withdraw() # hide root window

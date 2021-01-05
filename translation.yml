@@ -1,19 +1,34 @@
 en:
-  Title: Task Planner Login Page
+  _Title: Task Planner Login Page
+  _Introduction: Welcome to Task Planner App!
   Login: Login
   Register: Register
   Check your email: Check your email
   Password: Password
   Select Language: Select Language
   Welcome: Welcome!
-  Introduction: Welcome to Task Planner App!
-  
+  Task Planner: Task Planner
+  Title: Title
+  Description: Description
+  Projects: Projects
+  Add: Add
+  Add Task: Add Task
+  Add Project: Add Project
+  -- All --: -- All --
 tr:
-    Title: Task Planner Giriş Ekranı
-    Login: Giriş
-    Register: Kayıt
-    Check your email: Emailini kontrol et
-    Password: Şifre
-    Select Language: Dil Seçin
-    Welcome: Hoşgeldiniz!
-    Introduction: Task Planner Uygulamasına Hoşgeldin!
+  _Title: Task Planner Giriş Ekranı
+  _Introduction: Task Planner Uygulamasına Hoşgeldin!
+  Login: Giriş
+  Register: Kayıt
+  Check your email: Emailini kontrol et
+  Password: Şifre
+  Select Language: Dil Seçin
+  Welcome: Hoşgeldiniz!
+  Task Planner: Görev Takipçisi
+  Title: Başlık
+  Description: Açıklama
+  Projects: Projeler
+  Add: Ekle
+  Add Task: Görev Ekle
+  Add Project: Proje Ekle
+  -- All --: -- Tümü --
