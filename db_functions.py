@@ -151,24 +151,32 @@ class Database:
     #         # msg.showerror("Error", "Error: " + str(exc))   
 
     # task
-    def get_tasks(self, user, filters=None):
+    def get_tasks(self, user, filters={}):
         # date_range = filters['date'] 
-        # project = filters['project']
-        project_id = 1 # TODO: parametre ekle
+        project = filters.get('project', None)
         try:
             conn = self.get_db_connection()
             cur = conn.cursor()
-            query = """
-            SELECT *
-            from Task, Project
-            left join Project P on Task.project_id = P.id
-            where project.user_id = 1 and Project.id = ?"""
-            cur.execute(query, (project_id,))
+            if project:
+                query = """
+                SELECT *
+                from Task
+                left outer join Project on Task.project_id = Project.id
+                where task.user_id = ? and Project.name = ?"""
+                cur.execute(query, (user.id, project))
+            else:
+                query = """
+                SELECT *
+                from Task
+                left outer join Project on Task.project_id = Project.id
+                where task.user_id = ?"""
+                cur.execute(query, (user.id, ))
             tasks = []
             for task in cur.fetchall():
-                task_id, user_id, project_id, date_created, due_date, desc, title, status, _, project_name, _,_,_,_ = task
+                task_id, user_id, project_id, date_created, due_date, desc, title, status, _, project_name, _  = task
                 t = Task(user, project=project_name, title=title, desc=desc, date_created=date_created, due_date=due_date, id=task_id)
                 tasks.append(t)
+
             conn.close()
             return tasks
         except Exception as exc:

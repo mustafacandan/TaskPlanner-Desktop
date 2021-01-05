@@ -23,11 +23,13 @@ class TaskPlanner:
     def show_history(self):
         pass
     
-    def filter_today(self):
-        pass
-    
-    def filter_all(self):
-        pass
+    def apply_filter(self, project=None, date_range=None):
+        self.right_bot_frame.destroy()
+        filters = {
+            'project': project,
+            'date_range': date_range
+        }
+        self.create_right_bot_frame(filters=filters)
 
     def add_task(self):
         def add_task_complete():
@@ -95,9 +97,6 @@ class TaskPlanner:
         ttk.Label(add_project_win,  text ="Add Projetc").pack() 
 
 
-    def filter_inbox(self):
-        pass
-    
     def answer_mark(self):
         msg.showinfo(title= "?", message="Following project ToDos’ better via this software. You can add, categorize and remove projects. And you can track your projects.")
 
@@ -124,13 +123,13 @@ class TaskPlanner:
 
         ttk.Label(self.left_frame, text="Tasks").grid(column=0, row=0, columnspan=2, pady=10)
 
-        self.inbox_btn = ttk.Button(self.left_frame, text="inbox", width=15, command=self.filter_inbox)
+        self.inbox_btn = ttk.Button(self.left_frame, text="inbox", width=15, command=lambda: self.apply_filter(project=project[1]))
         self.inbox_btn.grid(column=0, row=1, columnspan=2, pady=20)
 
-        self.today_btn = ttk.Button(self.left_frame, text="today", width=15, command=self.filter_today)
+        self.today_btn = ttk.Button(self.left_frame, text="today", width=15, command=lambda: self.apply_filter(project=project[1]))
         self.today_btn.grid(column=0, row=2, columnspan=2, pady=20)
 
-        self.all_btn = ttk.Button(self.left_frame, text="all", width=15, command=self.filter_all)
+        self.all_btn = ttk.Button(self.left_frame, text="all", width=15, command=lambda: self.apply_filter(project=project[1]))
         self.all_btn.grid(column=0, row=3, columnspan=2, pady=20)
 
         # Projects 
@@ -138,8 +137,11 @@ class TaskPlanner:
         self.all_btn = ttk.Button(self.left_frame, text="+", width=2, command=self.add_project)
         self.all_btn.grid(column=1, row=4, columnspan=1, pady=4)
 
+        self.all_btn = ttk.Button(self.left_frame, text=' -- All -- ', width=15, command=lambda arg=None:  self.apply_filter(project=arg))
+        self.all_btn.grid(column=0, columnspan=2, pady=20)
+
         for project in db.get_projects(user):
-            self.all_btn = ttk.Button(self.left_frame, text=project[1], width=15, command=self.filter_all)
+            self.all_btn = ttk.Button(self.left_frame, text=project[1], width=15, command=lambda arg=project[1]:  self.apply_filter(project=arg))
             self.all_btn.grid(column=0, columnspan=2, pady=20)
 
     def create_right_top_frame(self):   
@@ -160,11 +162,12 @@ class TaskPlanner:
         self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
         self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
 
-    def create_right_bot_frame(self):
+    def create_right_bot_frame(self, filters={}):
         ## Right Bot Frame
         self.right_bot_frame = tk.Frame(self.right_frame)
         self.right_bot_frame.pack(side="bottom", fill=tk.BOTH, expand=1)
-        for task in db.get_tasks(user):
+
+        for task in db.get_tasks(user, filters=filters):
             task_text = f'{task.title}   |   {task.desc}   |   {task.project}     '
             ttk.Label(self.right_bot_frame, text=task_text).grid(column=0, columnspan=5, pady=10)
 
