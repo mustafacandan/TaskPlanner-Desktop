@@ -109,7 +109,14 @@ class TaskPlanner:
     def history_project(self):
         pass
     
-
+    
+    def delete_project(self):
+        msg.askquestion('Delete Current Project','Are you sure you really want to delete choosen project?', icon = 'warning')
+        if msg == 'yes':
+            db.delete_project(project_name)
+            
+        else: 
+         pass
 
     def create_widgets(self):
         self.create_left_frame()
@@ -152,18 +159,20 @@ class TaskPlanner:
         self.right_top_frame = tk.Frame(self.right_frame)
         self.right_top_frame.pack(side="top", fill=tk.BOTH, expand=1)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
+        self.all_btn = ttk.Button(self.right_top_frame, text="Delete", width=15, command=self.delete_project)
         self.all_btn.grid(column=0, row=0, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.search_project)
+        self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
         self.all_btn.grid(column=1, row=0, columnspan=1, pady=4)
 
-        self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.history_project)
+        self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.search_project)
         self.all_btn.grid(column=2, row=0, columnspan=1, pady=4)
 
-       
-        self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
+        self.all_btn = ttk.Button(self.right_top_frame, text="History", width=15, command=self.history_project)
         self.all_btn.grid(column=3, row=0, columnspan=1, pady=4)
+
+        self.all_btn = ttk.Button(self.right_top_frame, text="?", width=4, command=self.answer_mark)
+        self.all_btn.grid(column=4, row=0, columnspan=1, pady=4)
 
     def create_right_bot_frame(self, filters={}):
         ## Right Bot Frame
