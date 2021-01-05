@@ -1,7 +1,7 @@
 import socket
 import json
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, Toplevel
 from tkinter import messagebox as msg
 from db_functions import Database
 from models import User, Task
@@ -31,6 +31,47 @@ class TaskPlanner:
 
     def add_project(self):
         pass
+
+    def add_task(self):
+        def add_task_complete():
+            print(title_var.get(), desc_var.get(), project_var.get())
+
+            db.add_task( 
+                Task(user,datetime.now(),
+                datetime.now(),
+                project=project_var.get(),
+                title=title_var.get(),
+                desc=desc_var.get()))
+
+            add_task_win.destroy()
+
+        add_task_win = Toplevel(self.win) 
+        # sets the geometry of toplevel 
+        add_task_win.geometry("400x400") 
+
+        title_var = tk.StringVar()
+        title_lbl = tk.Label(add_task_win, text='Title of Task')
+        title_lbl.grid(row=1, column=1, pady=5, padx=100)
+        title_entry = tk.Entry(add_task_win, textvariable=title_var).grid(row=2, column=1, padx=100)
+
+        desc_var = tk.StringVar()
+        desc_lbl = tk.Label(add_task_win, text='Desc of Task')
+        desc_lbl.grid(row=3, column=1, pady=5, padx=100)
+        desc_entry = tk.Entry(add_task_win, textvariable=desc_var).grid(row=4, column=1, padx=100)
+
+        project_var = tk.StringVar()
+        project_var.set("Projects")
+
+        projects = ['No Project'] if db.get_projects(user) else db.get_projects(user)
+
+        project_list = tk.OptionMenu(add_task_win, project_var, *projects)
+        project_list.grid(row=5, column=1, padx=5)
+
+        loginButton = tk.Button(add_task_win, text='Add',
+                                command=add_task_complete)
+        loginButton.grid(row=6, column=1, pady=10, padx=100)
+
+        ttk.Label(add_task_win,  text ="Add task").pack() 
 
     def filter_inbox(self):
         pass
@@ -75,7 +116,7 @@ class TaskPlanner:
 
    
         ## Right Top Frame
-        self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_project)
+        self.all_btn = ttk.Button(self.right_top_frame, text="Add", width=15, command=self.add_task)
         self.all_btn.grid(column=0, row=0, columnspan=1, pady=4)
 
         self.all_btn = ttk.Button(self.right_top_frame, text="Search", width=15, command=self.add_project)
