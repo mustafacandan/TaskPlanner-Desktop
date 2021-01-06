@@ -15,7 +15,7 @@ from tkinter import ttk, Tk, Toplevel
 import tkinter as tk
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-l10n = yaml.safe_load(open(f'{root_dir}/translation.yml'))
+l10n = yaml.safe_load(open(f'{root_dir}/translation.yml', 'rt', encoding='utf8'))
 
 db = Database()
 db.create_tables()
